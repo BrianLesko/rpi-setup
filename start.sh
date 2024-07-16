@@ -48,6 +48,28 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo usermod -aG docker $username
 newgrp docker
 
+# Setup a reverse proxy for deploying applications 
+# We opt for Caddyserver
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install caddy
+touch Caddyfile
+sudo nano Caddyfile
+# add the following to the Caddyfile
+:80
+root * /var/www/html
+file_server
+
+handle_path /app1/ {
+  reverse_proxy localhost:3000
+}
+
+handle_path /app2/ {
+  reverse_proxy localhost:3001
+}
+
 # clone common repositories
 # clone the reverse proxy server
 git clone https://github.com/BrianLesko/reverse-proxy-nginx-docker
