@@ -5,7 +5,7 @@ USER=$(whoami)
 HOSTNAME=$(hostname)
 
 # Print the SSH command
-echo "ssh $USER@$HOSTNAME.local"
+echo "After switching networks, connect with : ssh $USER@$HOSTNAME.local"
 
 # Prompt for SSID and password if not provided as arguments
 SSID="${1:-}"
